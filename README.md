@@ -45,7 +45,8 @@ Each stakeholder judges one skill: Message, Clarity, Fit, Voice or Action. Their
 
 ```
 server/
-  index.js              Express API: /api/levels, /api/grade, /api/critique, /api/runs
+  app.js                Express API: /api/levels, /api/grade, /api/critique, /api/runs
+  index.js              Runs app.js locally (and serves client/dist for npm start)
   data/levels.js        All level content: companies, stakeholders, screens, field rules
   grading/heuristic.js  Rule-based grader (deterministic, explains every point)
   grading/ai.js         Optional Claude critique
@@ -55,15 +56,17 @@ client/
   src/components/       One component per screen, plus ScreenMockup (the fake product UIs)
   src/audio/chiptune.js Web Audio music and sound effects, no audio files
 scripts/dev.mjs         Starts both servers together
+vercel.json             Vercel services: client (Vite) serves the game; server (Express) answers /api/*
 ```
 
 ## Adding or unlocking a level
 
-Edit `server/data/levels.js`. Set `playable: true`, then add `business`, `project`, `tone`, `stakeholders` and three `rounds`. Each round picks a `layout` (`hero`, `card`, `confirm`, `form`, `dialog`, `empty`, `notification`, `summary`), and each field declares:
+Edit `server/data/levels.js`. Set `playable: true`, then add `business`, `project`, `tone`, `stakeholders` and three `rounds`. Each round has a `goal`, a list of `facts` (the specifics a player needs, shown as chips on the play screen) and a `layout` (`hero`, `card`, `confirm`, `form`, `dialog`, `empty`, `notification`, `summary`), and each field declares:
 
 - `kind`: `headline`, `body`, `cta`, `label` or `title`. This changes how the field is graded.
 - `slot`: where the copy appears in the mockup.
 - `max`: the character limit.
+- `hint`: an open prompt shown under the field label. Keep it vague ("What do they need to know to actually get their bread?") and put the specifics in `facts`.
 - `must`: groups of acceptable phrases. Each group counts toward the Message score.
 - `avoid`: risky words for this screen.
 

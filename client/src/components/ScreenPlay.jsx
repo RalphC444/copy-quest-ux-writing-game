@@ -133,7 +133,15 @@ export default function ScreenPlay({ level, screenIdx, difficulty, onSubmit, onQ
           <div className="brief-card">
             <p className="eyebrow">This screen</p>
             <h3>{screen.goal}</h3>
-            <p className="tip">Type on the screen itself, or in the fields below.</p>
+            {screen.facts?.length > 0 && (
+              <>
+                <p className="facts-title">The facts</p>
+                <ul className="facts">
+                  {screen.facts.map((f) => <li key={f}>{f}</li>)}
+                </ul>
+              </>
+            )}
+            <p className="tip">How you say it is up to you. Type on the screen itself, or in the fields below.</p>
           </div>
 
           <form className="copy-form" onSubmit={(e) => { e.preventDefault(); submit(); }}>

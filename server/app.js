@@ -1,5 +1,5 @@
-// The Express app with every /api route. index.js runs it locally;
-// api/index.js (repo root) serves it as a Vercel function.
+// The Express app with every /api route. index.js runs it locally; on Vercel this
+// file is the entrypoint of the "server" service, which receives /api/* requests.
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
