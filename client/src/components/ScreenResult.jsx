@@ -211,7 +211,7 @@ export default function ScreenResult({
         <div className="quotes-row" aria-live="polite">
           {people.map((s, i) => (
             <p key={s.name} className={`judge-quote ${i < shown ? 'show' : ''} mood-${s.mood}`}>
-              {i < shown ? `“${s.quote}”` : ''}
+              {i < shown ? s.quote : ''}
             </p>
           ))}
         </div>

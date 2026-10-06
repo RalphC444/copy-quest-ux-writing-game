@@ -31,22 +31,12 @@ export const levels = [
         role: 'Owner',
         wants: 'Make it sound like us. If it reads like a bank, I am not shipping it.',
         cares: 'voice',
-        lines: {
-          happy: 'That sounds like my grandmother wrote it. In a good way.',
-          meh: 'Close. It still sounds a bit like a chain store.',
-          mad: 'Who wrote this, a vending machine?',
-        },
       },
       {
         name: 'Marcus Lee',
         role: 'Operations Manager',
         wants: 'People must know pickup ends at 11 a.m. or I get angry calls all afternoon.',
         cares: 'message',
-        lines: {
-          happy: 'Pickup times are clear. My phone will finally stop ringing.',
-          meh: 'It does not quite say when or where to pick up.',
-          mad: 'Nobody will know when to come in. Expect a line out the door.',
-        },
       },
       {
         name: 'Priya Shah',
@@ -54,11 +44,6 @@ export const levels = [
         look: { mustache: false },
         wants: 'I need people to actually tap the button. Make the next step obvious.',
         cares: 'action',
-        lines: {
-          happy: 'Those buttons practically press themselves.',
-          meh: 'The buttons work, but they do not pull me in.',
-          mad: 'I would not know what to tap. Neither will anyone else.',
-        },
       },
     ],
     rounds: [
@@ -163,33 +148,18 @@ export const levels = [
         role: 'VP of Product',
         wants: 'Every screen needs one obvious next step. Activation is my whole quarter.',
         cares: 'action',
-        lines: {
-          happy: 'Clean next steps everywhere. Ship it.',
-          meh: 'A couple of buttons make me think too hard.',
-          mad: 'This will lose more people than the old flow.',
-        },
       },
       {
         name: 'Sam Whitfield',
         role: 'Security & Compliance',
         wants: 'Explain read-only access honestly. Never promise "100% secure."',
         cares: 'message',
-        lines: {
-          happy: 'Accurate, honest, no overpromising. Legal will be bored. Perfect.',
-          meh: 'Mostly right, but some details about access are missing.',
-          mad: 'This makes claims we cannot back up. Hard no.',
-        },
       },
       {
         name: 'Lena Park',
         role: 'Support Lead',
         wants: 'If an error does not say how to fix it, it becomes my ticket.',
         cares: 'clarity',
-        lines: {
-          happy: 'My team could paste this into a help article as is.',
-          meh: 'Readable, but a few lines are dense.',
-          mad: 'This will triple our ticket queue.',
-        },
       },
     ],
     rounds: [
@@ -300,33 +270,18 @@ export const levels = [
         role: 'Chief Medical Officer',
         wants: 'Patients should feel looked after, never rushed or alarmed.',
         cares: 'voice',
-        lines: {
-          happy: 'Calm and kind. This is how our nurses talk.',
-          meh: 'Mostly calm, but a few lines feel brisk.',
-          mad: 'This would worry patients. Please soften it.',
-        },
       },
       {
         name: 'Greg Holloway',
         role: 'Legal & Compliance',
         wants: 'Emergency guidance must be present. No promises about care outcomes.',
         cares: 'message',
-        lines: {
-          happy: 'All the required details are there. I have no notes.',
-          meh: 'A required detail is missing. Close, though.',
-          mad: 'We cannot publish this. Key safety details are missing.',
-        },
       },
       {
         name: 'Tess Romero',
         role: 'Accessibility Lead',
         wants: 'Short sentences. Plain words. Nothing in all caps.',
         cares: 'clarity',
-        lines: {
-          happy: 'Easy to read, easy to hear on a screen reader. Lovely.',
-          meh: 'A few long sentences would trip people up.',
-          mad: 'Too dense. Many patients will give up and call.',
-        },
       },
     ],
     rounds: [
@@ -440,33 +395,18 @@ export const levels = [
         role: 'Growth PM',
         wants: 'The membership pitch has to land right when they see what they paid.',
         cares: 'action',
-        lines: {
-          happy: 'That upsell is going to print memberships.',
-          meh: 'Decent, but the membership pitch is easy to ignore.',
-          mad: 'No one is joining off this.',
-        },
       },
       {
         name: 'Nadia Ibrahim',
         role: 'Payments Lead',
         wants: 'Always say whether the card was charged. Ambiguity creates chargebacks.',
         cares: 'message',
-        lines: {
-          happy: 'Precise about money every time. Chargebacks will drop.',
-          meh: 'The money part is a little fuzzy.',
-          mad: 'Drivers will think they were double-charged.',
-        },
       },
       {
         name: 'Chris Albright',
         role: 'Brand Director',
         wants: 'Short and sure of itself. Glanceable beats clever.',
         cares: 'fit',
-        lines: {
-          happy: 'Tight. Every line earns its spot.',
-          meh: 'A few lines run long for a parked driver.',
-          mad: 'Nobody reads paragraphs at a charger.',
-        },
       },
     ],
     rounds: [
@@ -583,33 +523,18 @@ export const levels = [
         role: 'Head of Fraud Operations',
         wants: 'Every alert needs the amount, the merchant and the last four digits. No exceptions.',
         cares: 'message',
-        lines: {
-          happy: 'Amount, merchant, card. That is an alert people can act on.',
-          meh: 'Close, but a detail members need to decide is missing.',
-          mad: 'Members cannot tell what we are asking about. They will call us.',
-        },
       },
       {
         name: 'Omar Haddad',
         role: 'Member Experience Lead',
         wants: 'Fraud is scary. Our words should not be. Keep it calm and kind.',
         cares: 'voice',
-        lines: {
-          happy: 'Reassuring without sounding sleepy. Nicely done.',
-          meh: 'A little cold. Members want to feel looked after.',
-          mad: 'This would frighten my mother.',
-        },
       },
       {
         name: 'Ruth Kimura',
         role: 'Security Lead',
         wants: 'Plain words only. If members have to reread a fraud alert, they ignore it.',
         cares: 'clarity',
-        lines: {
-          happy: 'I read it once and knew exactly what to do.',
-          meh: 'Readable, but it makes me work a little.',
-          mad: 'Too dense. This alert gets swiped away.',
-        },
       },
     ],
     rounds: [
@@ -721,33 +646,18 @@ export const levels = [
         role: 'Head of Growth',
         wants: 'Get them to a first draft fast. Every extra click loses people.',
         cares: 'action',
-        lines: {
-          happy: 'That gets people writing in seconds.',
-          meh: 'Fine, but I would wander off before the first draft.',
-          mad: 'Nobody makes it past this screen.',
-        },
       },
       {
         name: 'Ama Owusu',
         role: 'Trust & AI Ethics Lead',
         wants: 'Be honest about what the AI cannot do, and that people stay in control.',
         cares: 'message',
-        lines: {
-          happy: 'Honest and clear about the limits. I would sign off.',
-          meh: 'Mostly honest, but a key caveat is missing.',
-          mad: 'This overpromises. We lose trust on day one.',
-        },
       },
       {
         name: 'Jun Park',
         role: 'Brand Writer',
         wants: 'No hype words. If it sounds like a launch tweet, rewrite it.',
         cares: 'voice',
-        lines: {
-          happy: 'Zero hype. Sounds like a person. Love it.',
-          meh: 'One or two lines drift into ad-speak.',
-          mad: 'This reads like a crypto launch.',
-        },
       },
     ],
     rounds: [
@@ -861,33 +771,18 @@ export const levels = [
         role: 'Founder',
         wants: 'Sound like a guide at the trailhead, not a lawyer.',
         cares: 'voice',
-        lines: {
-          happy: 'Sounds like us. Like a friend who knows the trail.',
-          meh: 'A bit stiff. Loosen the boots.',
-          mad: 'This reads like a terms-of-service page.',
-        },
       },
       {
         name: 'Carmen Ruiz',
         role: 'Customer Care Manager',
         wants: 'Every no needs a next step: exchange, repair or store credit.',
         cares: 'message',
-        lines: {
-          happy: 'Every no has a way forward. My team will love it.',
-          meh: 'Mostly there, but someone will still call us.',
-          mad: 'Dead ends everywhere. Our phones will melt.',
-        },
       },
       {
         name: 'Theo Lindqvist',
         role: 'E-commerce Product Manager',
         wants: 'Mobile first. If it wraps to five lines, it is too long.',
         cares: 'fit',
-        lines: {
-          happy: 'Tight and scannable. Perfect on a phone.',
-          meh: 'Some lines run long on mobile.',
-          mad: 'Wall of text. Nobody reads this on a phone.',
-        },
       },
     ],
     rounds: [
@@ -999,33 +894,18 @@ export const levels = [
         role: 'VP of Operations',
         wants: 'Every alert needs the flight, the new time and the gate. People are standing in an airport.',
         cares: 'message',
-        lines: {
-          happy: 'Flight, time, gate. My agents can breathe.',
-          meh: 'Close, but one missing detail sends people to the desk.',
-          mad: 'Everyone is going to line up at the gate now.',
-        },
       },
       {
         name: 'Sami Rahman',
         role: 'Customer Advocate',
         wants: 'Own it. Say sorry once, plainly, and skip the corporate excuses.',
         cares: 'voice',
-        lines: {
-          happy: 'Human and honest. People will feel respected.',
-          meh: 'A little stiff. Sounds like a press release.',
-          mad: 'This hides behind jargon. People will be furious.',
-        },
       },
       {
         name: 'Ivy Chen',
         role: 'Mobile Product Lead',
         wants: 'Give them a button that solves it: rebook, take a credit, see options.',
         cares: 'action',
-        lines: {
-          happy: 'One tap and they are sorted. Beautiful.',
-          meh: 'The next step is there, but easy to miss.',
-          mad: 'No clear way out. They will all call.',
-        },
       },
     ],
     rounds: [
