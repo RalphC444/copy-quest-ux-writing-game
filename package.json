@@ -1,0 +1,12 @@
+{
+  "name": "copy-quest",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A copywriting UX game: brief, timed rounds, graded copy.",
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev": "node scripts/dev.mjs",
+    "build": "cd client && node node_modules/vite/bin/vite.js build",
+    "start": "npm --prefix server start"
+  }
+}
