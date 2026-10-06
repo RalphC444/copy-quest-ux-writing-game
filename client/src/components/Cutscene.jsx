@@ -78,7 +78,7 @@ export default function Cutscene({ level, mode = 'intro', difficulty, onDifficul
 
   return (
     <section className="cutscene" style={{ '--lv': level.brand.color }} aria-label={`Mission briefing: ${level.company}`}>
-      <div className={`cut-scene-wrap beat-${Math.min(beat, 3)}`}>
+      <div className="cut-scene-wrap">
         <WorldScene id={level.id} fit={fit} />
       </div>
       <div className="cut-shade" aria-hidden="true" />
