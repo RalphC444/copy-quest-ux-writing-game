@@ -492,9 +492,6 @@ blockquote.blank { color: var(--bad); border-left-color: var(--bad); font-style:
 .warn-text { color: var(--warn); }
 .bad-text { color: var(--bad); }
 
-.director-notes p { margin: 0 0 10px; font-size: 16px; max-width: 70ch; }
-.rewrites { display: grid; gap: 12px; margin-top: 8px; }
-.rewrites li { background: var(--bg-2); padding: 12px 14px; }
 code { font: 500 14px ui-monospace, Menlo, monospace; color: var(--fg); }
 
 
@@ -787,6 +784,18 @@ code { font: 500 14px ui-monospace, Menlo, monospace; color: var(--fg); }
 @keyframes title-in { from { opacity: 0; transform: translateY(16px); letter-spacing: .1em; } }
 @keyframes walk-in { from { opacity: 0; transform: translateY(40px); } }
 
+/* ---------- analytics consent ---------- */
+.consent {
+  position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 80; margin: 0 auto; max-width: 760px;
+  display: flex; align-items: center; gap: 18px; padding: 16px 18px;
+  background: var(--panel); border: 2px solid var(--fg); box-shadow: 6px 6px 0 #0b0619;
+}
+.consent-copy { flex: 1; min-width: 0; }
+.consent strong { display: block; font: 700 16px var(--f-ui); margin-bottom: 4px; }
+.consent p { margin: 0; font-size: 14px; line-height: 1.45; }
+.consent-actions { display: flex; gap: 8px; flex: none; }
+.privacy-link { margin-top: 28px; font-size: 14px; color: var(--muted); }
+
 /* ---------- motion ---------- */
 @keyframes pulse { 50% { transform: scale(1.04); } }
 @keyframes blink { 50% { opacity: 0; } }
@@ -834,6 +843,8 @@ code { font: 500 14px ui-monospace, Menlo, monospace; color: var(--fg); }
   .xp-panel { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .rank-body { display: none; }
   .fr-grid { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .consent { flex-direction: column; align-items: stretch; }
+  .consent-actions .btn { flex: 1; }
   .skill-tiles { grid-template-columns: minmax(0, 1fr); }
   .world-select { position: static; overflow: visible; background: transparent; margin: -20px -16px 0; display: flex; flex-direction: column; }
   .world-top { order: -1; }

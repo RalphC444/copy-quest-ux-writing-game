@@ -26,6 +26,7 @@ function Slot({ slot, fields, values, active, onEdit, onFocusField, as: Tag = 's
           value={value}
           placeholder={field.label}
           aria-label={`${field.label} (on the screen)`}
+          data-hj-allow=""
           spellCheck
           onFocus={() => onFocusField?.(field.id)}
           onKeyDown={(e) => { if (singleLine && e.key === 'Enter' && !e.metaKey && !e.ctrlKey) e.preventDefault(); }}

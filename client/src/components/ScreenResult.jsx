@@ -107,15 +107,13 @@ function FieldReview({ f }) {
 }
 
 export default function ScreenResult({
-  level, screenIdx, difficulty, answers, timing, aiOn, onProgress, onPlayer, onNext, onRetry, onMap,
+  level, screenIdx, difficulty, answers, timing, onProgress, onPlayer, onNext, onRetry, onMap,
 }) {
   const screen = level.rounds[screenIdx];
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [shown, setShown] = useState(0); // judges revealed so far
   const [xp, setXp] = useState(null);
-  const [notes, setNotes] = useState(null);
-  const [notesState, setNotesState] = useState('idle');
   const asked = useRef(false);
   const timers = useRef([]);
   const payload = { levelId: level.id, screen: screenIdx, difficulty, answers, timing };
@@ -156,17 +154,6 @@ export default function ScreenResult({
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const skip = () => { timers.current.forEach(clearTimeout); setShown(result?.stakeholders.length ?? 0); };
-
-  const askDirector = async () => {
-    setNotesState('loading');
-    try {
-      setNotes(await api.critique(payload));
-      setNotesState('done');
-    } catch (e) {
-      setNotesState('error');
-      setNotes({ error: e.message });
-    }
-  };
 
   if (error) {
     return (
@@ -258,40 +245,6 @@ export default function ScreenResult({
             </ul>
           </div>
 
-          <div className="panel director">
-            <h3>Creative Director notes</h3>
-            {!aiOn && (
-              <p className="muted">
-                Turn on written feedback from Claude by adding <code>ANTHROPIC_API_KEY</code> to <code>server/.env</code> and restarting.
-              </p>
-            )}
-            {aiOn && notesState === 'idle' && <button className="btn btn-primary" onClick={askDirector}>Ask for notes</button>}
-            {notesState === 'loading' && <p className="muted">Reading your draft<span className="dots" /></p>}
-            {notesState === 'error' && (
-              <>
-                <p className="bad-text">{notes.error}</p>
-                <button className="btn btn-ghost" onClick={askDirector}>Try again</button>
-              </>
-            )}
-            {notesState === 'done' && notes && (
-              <div className="director-notes">
-                <p>{notes.summary}</p>
-                {notes.strength && <p><strong>Keep doing:</strong> {notes.strength}</p>}
-                {notes.focus && <p><strong>Work on:</strong> {notes.focus}</p>}
-                {notes.rewrites?.length > 0 && (
-                  <ul className="rewrites">
-                    {notes.rewrites.map((rw, i) => (
-                      <li key={i}>
-                        <span className="chip">{screen.fields.find((f) => f.id === rw.fieldId)?.label ?? rw.fieldId}</span>
-                        <blockquote>{rw.rewrite}</blockquote>
-                        <span className="muted">{rw.why}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
-          </div>
         </>
       )}
     </section>

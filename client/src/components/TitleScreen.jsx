@@ -9,7 +9,7 @@ const SKILLS = [
   { name: 'Action', text: 'Write buttons that say exactly what happens next.' },
 ];
 
-export default function TitleScreen({ onStart, xp = 0 }) {
+export default function TitleScreen({ onStart, onPrivacy, xp = 0 }) {
   const current = rankFor(xp);
 
   useEffect(() => {
@@ -66,6 +66,7 @@ export default function TitleScreen({ onStart, xp = 0 }) {
           {current.next ? `. ${current.toNext.toLocaleString()} XP to ${current.next.title}.` : '. Top rank.'}
         </p>
       </div>
+      <button className="link-btn privacy-link" onClick={onPrivacy}>Privacy settings</button>
     </section>
   );
 }

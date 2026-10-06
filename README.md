@@ -11,10 +11,6 @@ npm run dev           # API on :5050, game on http://localhost:5180
 
 Production-style: `npm run build && npm start`. The server then serves the built client on http://localhost:5050.
 
-### Optional: Creative Director notes from Claude
-
-Copy `server/.env.example` to `server/.env` and set `ANTHROPIC_API_KEY`. The results screen then shows an **Ask for notes** button that returns a written critique and rewrites of your three weakest lines. Scoring never depends on it.
-
 ## How it plays
 
 1. **World select:** eight clients (A–H), each shown as a full-screen pixel-art environment with the details overlaid: a bakery, a fintech tower, a clinic, an EV charging stop, a harbor bank, a writing studio, a mountain gear shop and an airport. Use the arrows (or ← →) to browse. The next world wipes in and the page glow changes to match it. Everyone starts on World A, and clearing all three levels of a world unlocks the next. The older letter grid is still available under **Classic grid view**.

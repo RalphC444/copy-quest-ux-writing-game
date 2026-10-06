@@ -13,5 +13,4 @@ export const api = {
   levels: () => request('/levels'),
   level: (id) => request(`/levels/${id}`),
   grade: (payload) => request('/grade', { method: 'POST', body: JSON.stringify(payload) }),
-  critique: (payload) => request('/critique', { method: 'POST', body: JSON.stringify(payload) }),
 };

@@ -164,6 +164,7 @@ export default function ScreenPlay({ level, screenIdx, difficulty, onSubmit, onQ
                     autoFocus={i === 0}
                     rows={f.kind === 'body' ? 3 : undefined}
                     aria-describedby={`h-${f.id}`}
+                    data-hj-allow=""
                     onFocus={() => setActive(f.id)}
                     onChange={(e) => {
                       setValues((prev) => ({ ...prev, [f.id]: e.target.value }));

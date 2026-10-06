@@ -5,6 +5,8 @@ import {
   loadProgress, loadPlayer, loadSelectView, saveSelectView, hasBriefed, markBriefed, companyStars,
 } from './lib/progress.js';
 import RankBadge from './components/RankBadge.jsx';
+import ConsentBanner from './components/ConsentBanner.jsx';
+import { loadConsent, saveConsent, startHotjar } from './lib/analytics.js';
 import TitleScreen from './components/TitleScreen.jsx';
 import LevelSelect from './components/LevelSelect.jsx';
 import WorldSelect from './components/WorldSelect.jsx';
@@ -28,18 +30,28 @@ export default function App() {
   const [progress, setProgress] = useState(loadProgress);
   const [player, setPlayer] = useState(loadPlayer);
   const [muted, setMuted] = useState(false);
-  const [aiOn, setAiOn] = useState(false);
   const [error, setError] = useState('');
   const [selectView, setSelectView] = useState(loadSelectView);
   const [glow, setGlow] = useState(null);
   const [cutMode, setCutMode] = useState('intro');
+  const [consent, setConsent] = useState(loadConsent);
+  const [askConsent, setAskConsent] = useState(() => loadConsent() === null);
+
+  useEffect(() => { if (consent === 'granted') startHotjar(); }, [consent]);
+
+  const chooseConsent = (value) => {
+    saveConsent(value);
+    // Hotjar can't be unloaded mid-session, so switching it off reloads the page without it.
+    if (value === 'denied' && consent === 'granted') { window.location.reload(); return; }
+    setConsent(value);
+    setAskConsent(false);
+  };
   const onTheme = useCallback((color) => setGlow(color), []);
 
   const switchView = (v) => { setSelectView(v); saveSelectView(v); };
 
   useEffect(() => {
     api.levels().then(setLevels).catch(() => setError('Cannot reach the game server. Start it with "npm run dev" from the project folder.'));
-    api.health().then((h) => setAiOn(Boolean(h.ai))).catch(() => {});
   }, []);
 
   useEffect(() => { audio.setMuted(muted); }, [muted]);
@@ -97,7 +109,13 @@ export default function App() {
       )}
 
       <main className="stage">
-        {phase === 'title' && <TitleScreen xp={player.xp} onStart={() => { audio.play('go'); setPhase('select'); }} />}
+        {phase === 'title' && (
+          <TitleScreen
+            xp={player.xp}
+            onStart={() => { audio.play('go'); setPhase('select'); }}
+            onPrivacy={() => setAskConsent(true)}
+          />
+        )}
 
         {phase === 'select' && levels.length > 0 && (selectView === 'world' ? (
           <WorldSelect
@@ -157,7 +175,6 @@ export default function App() {
             difficulty={difficulty}
             answers={answers}
             timing={timing}
-            aiOn={aiOn}
             onProgress={setProgress}
             onPlayer={setPlayer}
             onNext={() => play(screenIdx + 1)}
@@ -166,6 +183,8 @@ export default function App() {
           />
         )}
       </main>
+
+      {askConsent && <ConsentBanner onChoose={chooseConsent} />}
     </div>
   );
 }
