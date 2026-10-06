@@ -1,17 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from './lib/api.js';
 import { audio } from './audio/chiptune.js';
-import { loadProgress, loadPlayer } from './lib/progress.js';
+import {
+  loadProgress, loadPlayer, loadSelectView, saveSelectView, hasBriefed, markBriefed, companyStars,
+} from './lib/progress.js';
 import RankBadge from './components/RankBadge.jsx';
 import TitleScreen from './components/TitleScreen.jsx';
 import LevelSelect from './components/LevelSelect.jsx';
-import Briefing from './components/Briefing.jsx';
+import WorldSelect from './components/WorldSelect.jsx';
+import Cutscene from './components/Cutscene.jsx';
 import LevelMap from './components/LevelMap.jsx';
 import Countdown from './components/Countdown.jsx';
 import ScreenPlay from './components/ScreenPlay.jsx';
 import ScreenResult from './components/ScreenResult.jsx';
 
-// Flow: title → select (worlds A–H) → briefing → map (levels A-1, A-2, A-3) → countdown → play → result
+// Flow: title → select (worlds A–H) → briefing cutscene (first visit only) → countdown → play → result → map
+// The level map is the hub once a player has left their first level.
 export default function App() {
   const [phase, setPhase] = useState('title');
   const [levels, setLevels] = useState([]);
@@ -26,6 +30,12 @@ export default function App() {
   const [muted, setMuted] = useState(false);
   const [aiOn, setAiOn] = useState(false);
   const [error, setError] = useState('');
+  const [selectView, setSelectView] = useState(loadSelectView);
+  const [glow, setGlow] = useState(null);
+  const [cutMode, setCutMode] = useState('intro');
+  const onTheme = useCallback((color) => setGlow(color), []);
+
+  const switchView = (v) => { setSelectView(v); saveSelectView(v); };
 
   useEffect(() => {
     api.levels().then(setLevels).catch(() => setError('Cannot reach the game server. Start it with "npm run dev" from the project folder.'));
@@ -38,7 +48,9 @@ export default function App() {
     try {
       const full = await api.level(id);
       setLevel(full);
-      setPhase('briefing');
+      // First visit plays the briefing as a cutscene that leads into level 1.
+      const fresh = !hasBriefed(full.id) && companyStars(progress, full.id).cleared === 0;
+      if (fresh) { setCutMode('intro'); setPhase('cutscene'); } else setPhase('map');
     } catch (e) {
       setError(e.message);
     }
@@ -59,8 +71,7 @@ export default function App() {
   const toSelect = () => { audio.stopMusic(); setPhase('select'); };
 
   return (
-    <div className="shell">
-      <div className="scanlines" aria-hidden="true" />
+    <div className="shell" style={glow ? { '--world-glow': glow } : undefined}>
       <header className="topbar">
         <button className="wordmark" onClick={toSelect} disabled={phase === 'title'}>
           COPY<span>QUEST</span>
@@ -86,12 +97,29 @@ export default function App() {
       )}
 
       <main className="stage">
-        {phase === 'title' && <TitleScreen onStart={() => { audio.play('go'); setPhase('select'); }} />}
+        {phase === 'title' && <TitleScreen xp={player.xp} onStart={() => { audio.play('go'); setPhase('select'); }} />}
 
-        {phase === 'select' && <LevelSelect levels={levels} progress={progress} onPick={pickWorld} />}
+        {phase === 'select' && levels.length > 0 && (selectView === 'world' ? (
+          <WorldSelect
+            levels={levels}
+            progress={progress}
+            onPick={pickWorld}
+            onTheme={onTheme}
+            onClassic={() => switchView('classic')}
+          />
+        ) : (
+          <LevelSelect levels={levels} progress={progress} onPick={pickWorld} onWorldView={() => switchView('world')} />
+        ))}
 
-        {phase === 'briefing' && level && (
-          <Briefing level={level} onDone={() => setPhase('map')} onBack={toSelect} />
+        {phase === 'cutscene' && level && (
+          <Cutscene
+            level={level}
+            mode={cutMode}
+            difficulty={difficulty}
+            onDifficulty={setDifficulty}
+            onStart={() => { markBriefed(level.id); play(0); }}
+            onExit={() => { markBriefed(level.id); setPhase('map'); }}
+          />
         )}
 
         {phase === 'map' && level && (
@@ -101,7 +129,7 @@ export default function App() {
             difficulty={difficulty}
             onDifficulty={setDifficulty}
             onPlay={play}
-            onBriefing={() => setPhase('briefing')}
+            onBriefing={() => { setCutMode('replay'); setPhase('cutscene'); }}
             onBack={toSelect}
           />
         )}
@@ -117,6 +145,7 @@ export default function App() {
             screenIdx={screenIdx}
             difficulty={difficulty}
             onSubmit={finishScreen}
+            onQuit={() => { audio.stopMusic(); setPhase('map'); }}
           />
         )}
 

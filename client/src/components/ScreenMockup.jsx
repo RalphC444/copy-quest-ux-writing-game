@@ -1,16 +1,37 @@
-// Renders a fake product screen and drops the player's copy into its slots as they type.
+import { useRef } from 'react';
 
-function Slot({ slot, fields, values, active, as: Tag = 'span', className = '' }) {
+// Renders a fake product screen. Every copy slot is editable in place: click it and type.
+// Edits flow through onEdit, so the mockup and the brief form on the right stay in sync.
+
+const SINGLE_LINE = new Set(['headline', 'title', 'cta', 'label']);
+
+function Slot({ slot, fields, values, active, onEdit, onFocusField, as: Tag = 'span', className = '' }) {
+  const ref = useRef(null);
   const field = fields.find((f) => f.slot === slot);
   if (!field) return null;
   const value = values[field.id];
   const over = value && value.length > field.max;
+  const singleLine = SINGLE_LINE.has(field.kind);
+
   return (
     <Tag
       className={`slot ${className} ${value ? 'filled' : 'empty'} ${active === field.id ? 'active' : ''} ${over ? 'over' : ''}`}
-      data-label={field.label}
+      onClick={() => ref.current?.focus()}
     >
-      {value || field.label}
+      {/* The ::after mirror sizes the box to the text, so the editor grows as you type */}
+      <span className="grow" data-value={`${value || field.label} `}>
+        <textarea
+          ref={ref}
+          rows={1}
+          value={value}
+          placeholder={field.label}
+          aria-label={`${field.label} (on the screen)`}
+          spellCheck
+          onFocus={() => onFocusField?.(field.id)}
+          onKeyDown={(e) => { if (singleLine && e.key === 'Enter' && !e.metaKey && !e.ctrlKey) e.preventDefault(); }}
+          onChange={(e) => onEdit?.(field.id, singleLine ? e.target.value.replace(/\n/g, ' ') : e.target.value)}
+        />
+      </span>
     </Tag>
   );
 }
@@ -30,10 +51,10 @@ function Phone({ children, brand, dim }) {
   );
 }
 
-export default function ScreenMockup({ level, round, values, active }) {
+export default function ScreenMockup({ level, round, values, active, onEdit, onFocusField }) {
   const { brand } = level;
   const s = round.static || {};
-  const p = { fields: round.fields, values, active };
+  const p = { fields: round.fields, values, active, onEdit, onFocusField };
   const vars = { '--b': brand.color, '--b-ink': brand.ink, '--b-surface': brand.surface };
 
   let body;
@@ -85,9 +106,9 @@ export default function ScreenMockup({ level, round, values, active }) {
             <div className="m-check" aria-hidden="true">✓</div>
             <Slot slot="headline" as="h1" className="m-h1 center" {...p} />
             <dl className="m-receipt">
-              <div><dt>Order</dt><dd>{s.order}</dd></div>
-              <div><dt>Shop</dt><dd>{s.shop}</dd></div>
-              <div><dt>Pickup</dt><dd>{s.window}</dd></div>
+              {(s.rows || [['Order', s.order], ['Shop', s.shop], ['Pickup', s.window]]).map(([k, v]) => (
+                <div key={k}><dt>{k}</dt><dd>{v}</dd></div>
+              ))}
             </dl>
             <Slot slot="body" as="p" className="m-body center" {...p} />
             <Slot slot="cta" className="m-btn wide" {...p} />

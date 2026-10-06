@@ -42,3 +42,33 @@ export function addXp(amount) {
   try { localStorage.setItem(PLAYER_KEY, JSON.stringify(next)); } catch { /* storage unavailable */ }
   return next;
 }
+
+// Worlds unlock in order: World A is always open, and each later world opens
+// once every level of the world before it has been cleared.
+export function worldUnlocked(levels, progress, index) {
+  if (index <= 0) return true;
+  const prev = levels[index - 1];
+  if (!prev?.playable) return false;
+  return companyStars(progress, prev.id).cleared >= 3;
+}
+
+// Worlds whose briefing cutscene has played. Later visits go straight to the level map.
+const BRIEFED_KEY = 'copy-quest:briefed';
+export function hasBriefed(levelId) {
+  try { return Boolean(JSON.parse(localStorage.getItem(BRIEFED_KEY))?.[levelId]); } catch { return false; }
+}
+export function markBriefed(levelId) {
+  try {
+    const all = JSON.parse(localStorage.getItem(BRIEFED_KEY)) || {};
+    all[levelId] = true;
+    localStorage.setItem(BRIEFED_KEY, JSON.stringify(all));
+  } catch { /* storage unavailable */ }
+}
+
+const VIEW_KEY = 'copy-quest:select-view';
+export function loadSelectView() {
+  try { return localStorage.getItem(VIEW_KEY) || 'world'; } catch { return 'world'; }
+}
+export function saveSelectView(v) {
+  try { localStorage.setItem(VIEW_KEY, v); } catch { /* storage unavailable */ }
+}

@@ -8,5 +8,15 @@
     "dev": "node scripts/dev.mjs",
     "build": "cd client && node node_modules/vite/bin/vite.js build",
     "start": "npm --prefix server start"
+  },
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

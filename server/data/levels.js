@@ -550,14 +550,552 @@ export const levels = [
       },
     ],
   },
-  { id: 'E', playable: false, company: 'Harbor Bank', genre: 'Fraud alerts', stars: 4,
-    teaser: 'Write fraud alerts people trust and act on within seconds.' },
-  { id: 'F', playable: false, company: 'Quill', genre: 'AI writing assistant', stars: 4,
-    teaser: 'Onboard skeptics to an AI tool without hype.' },
-  { id: 'G', playable: false, company: 'Trailhead Outdoors', genre: 'E-commerce returns', stars: 5,
-    teaser: 'Turn a strict returns policy into copy that keeps customers.' },
-  { id: 'H', playable: false, company: 'Orbit Air', genre: 'Flight disruptions', stars: 5,
-    teaser: 'Cancelled flight, 300 angry passengers, one push notification.' },
+  {
+    id: 'E',
+    playable: true,
+    company: 'Harbor Bank',
+    genre: 'Banking fraud alerts',
+    stars: 4,
+    teaser: 'Fraud alerts members trust and act on in seconds. Calm beats scary.',
+    brand: { color: '#0f6e8c', ink: '#08222c', surface: '#eef6f8', mark: 'HB' },
+    business:
+      'Harbor Bank is a 90-year-old community bank with 60 branches along the Gulf Coast and a growing mobile app. Most members are over 50 and wary of scams.',
+    project:
+      'We are redesigning fraud alerts so members can confirm or block a suspicious charge in seconds. Every alert must be trusted, not ignored.',
+    tone: { label: 'Calm, direct, trustworthy', exclamations: 0, serious: true },
+    avoid: ['oops', 'unfortunately', 'kindly', 'valued customer', 'utilize', 'leverage', 'click here', 'act now'],
+    stakeholders: [
+      {
+        name: 'Denise Fairbanks',
+        role: 'Head of Fraud Operations',
+        wants: 'Every alert needs the amount, the merchant and the last four digits. No exceptions.',
+        cares: 'message',
+        lines: {
+          happy: 'Amount, merchant, card. That is an alert people can act on.',
+          meh: 'Close, but a detail members need to decide is missing.',
+          mad: 'Members cannot tell what we are asking about. They will call us.',
+        },
+      },
+      {
+        name: 'Omar Haddad',
+        role: 'Member Experience Lead',
+        wants: 'Fraud is scary. Our words should not be. Keep it calm and kind.',
+        cares: 'voice',
+        lines: {
+          happy: 'Reassuring without sounding sleepy. Nicely done.',
+          meh: 'A little cold. Members want to feel looked after.',
+          mad: 'This would frighten my mother.',
+        },
+      },
+      {
+        name: 'Ruth Kimura',
+        role: 'Security Lead',
+        wants: 'Plain words only. If members have to reread a fraud alert, they ignore it.',
+        cares: 'clarity',
+        lines: {
+          happy: 'I read it once and knew exactly what to do.',
+          meh: 'Readable, but it makes me work a little.',
+          mad: 'Too dense. This alert gets swiped away.',
+        },
+      },
+    ],
+    rounds: [
+      {
+        title: 'Fraud alert',
+        layout: 'notification',
+        goal: 'A $482.19 charge at ElectroMart on card ending 7731 looks unusual. Ask the member if it was them.',
+        static: { app: 'Harbor Bank' },
+        fields: [
+          { id: 'title', slot: 'title', kind: 'title', label: 'Title', max: 40,
+            hint: 'Ask: did you make this charge?',
+            must: [
+              { need: 'Ask if the charge was theirs', any: ['was this you', 'did you', 'yours', 'you make', 'you made', 'recognize'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 120,
+            hint: '$482.19 at ElectroMart on your card ending 7731.',
+            must: [
+              { need: 'Include the amount: $482.19', any: ['482.19'] },
+              { need: 'Name the merchant: ElectroMart', any: ['electromart'] },
+              { need: 'Name the card: ending 7731', any: ['7731'] },
+            ],
+            avoid: ['pin', 'password', 'social security'] },
+          { id: 'action', slot: 'cta', kind: 'cta', label: 'Action', max: 18,
+            hint: 'Open the charge to review it.',
+            must: [
+              { need: 'Let them review the charge', any: ['review', 'check', 'see', 'view'] },
+            ] },
+        ],
+      },
+      {
+        title: 'Card locked',
+        layout: 'dialog',
+        goal: 'They said it was not them. The card is now locked. Tell them they are safe and what happens next.',
+        static: {},
+        fields: [
+          { id: 'title', slot: 'title', kind: 'title', label: 'Title', max: 36,
+            hint: 'Tell them the card is locked.',
+            must: [
+              { need: 'Say the card is locked', any: ['locked', 'frozen', 'blocked', 'paused'] },
+            ],
+            avoid: ['error', 'failed'] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 150,
+            hint: 'You will not pay for the $482.19 charge. A new card arrives in 5 to 7 days.',
+            must: [
+              { need: 'Say they will not pay for the charge', any: ["won't pay", 'will not pay', 'not responsible', "won't be charged", 'refund', 'not charged', 'covered', "don't owe", 'do not owe'] },
+              { need: 'Say a new card is coming', any: ['new card', 'replacement'] },
+              { need: 'Give the timing: 5 to 7 days', any: ['5', '7', 'days', 'week'] },
+            ],
+            avoid: ['pin', 'password', 'unfortunately'] },
+          { id: 'primary', slot: 'cta', kind: 'cta', label: 'Primary button', max: 22,
+            hint: 'Track the new card.',
+            must: [
+              { need: 'Let them track the new card', any: ['track', 'see', 'view', 'check'] },
+            ] },
+          { id: 'secondary', slot: 'secondary', kind: 'cta', label: 'Secondary button', max: 22,
+            hint: 'Talk to a person.',
+            must: [
+              { need: 'Offer a person to talk to', any: ['call', 'talk', 'chat', 'help', 'contact', 'support'] },
+            ] },
+        ],
+      },
+      {
+        title: 'Verify a new phone',
+        layout: 'form',
+        goal: 'A member is signing in on a new phone. Send a one-time code, and warn them never to share it.',
+        static: { step: 'Verify it’s you', banks: ['Text (•••) •••-0142', 'Email r•••@mail.com', 'Call me instead'] },
+        fields: [
+          { id: 'headline', slot: 'headline', kind: 'headline', label: 'Headline', max: 36,
+            hint: 'Ask them to confirm it is really them.',
+            must: [
+              { need: 'Ask them to verify or confirm', any: ['verify', 'confirm', "it's you", 'it is you', 'check'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 140,
+            hint: 'We will send a 6-digit code. Never share it. Harbor Bank will never ask you for it.',
+            must: [
+              { need: 'Mention the code', any: ['code'] },
+              { need: 'Say the bank never asks for it', any: ['never ask', 'never call', 'will never', 'we never', "won't ask"] },
+              { need: 'Tell them not to share it', any: ["don't share", 'do not share', 'never share', 'keep it', 'only you', 'not share'] },
+            ] },
+          { id: 'cta', slot: 'cta', kind: 'cta', label: 'Button', max: 20,
+            hint: 'Send the code.',
+            must: [
+              { need: 'Name the action: send the code', any: ['send', 'get', 'text'] },
+            ] },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'F',
+    playable: true,
+    company: 'Quill',
+    genre: 'AI writing assistant',
+    stars: 4,
+    teaser: 'Onboard AI skeptics with honesty, not hype.',
+    brand: { color: '#a8457f', ink: '#2a0f22', surface: '#fbf2f7', mark: 'Q' },
+    business:
+      'Quill is an AI writing assistant used by 40,000 teams to draft emails, docs and support replies. Most new users arrive skeptical after tools that overpromised.',
+    project:
+      'We are rebuilding onboarding so skeptics see one real, useful result in their first two minutes. No hype, no magic words.',
+    tone: { label: 'Friendly, honest, no hype', exclamations: 1, serious: false },
+    avoid: ['revolutionary', 'magic', 'game-changing', 'game changer', 'supercharge', 'unleash', '10x', 'effortless', 'cutting-edge', 'seamless'],
+    stakeholders: [
+      {
+        name: 'Leo Brandt',
+        role: 'Head of Growth',
+        wants: 'Get them to a first draft fast. Every extra click loses people.',
+        cares: 'action',
+        lines: {
+          happy: 'That gets people writing in seconds.',
+          meh: 'Fine, but I would wander off before the first draft.',
+          mad: 'Nobody makes it past this screen.',
+        },
+      },
+      {
+        name: 'Ama Owusu',
+        role: 'Trust & AI Ethics Lead',
+        wants: 'Be honest about what the AI cannot do, and that people stay in control.',
+        cares: 'message',
+        lines: {
+          happy: 'Honest and clear about the limits. I would sign off.',
+          meh: 'Mostly honest, but a key caveat is missing.',
+          mad: 'This overpromises. We lose trust on day one.',
+        },
+      },
+      {
+        name: 'Jun Park',
+        role: 'Brand Writer',
+        wants: 'No hype words. If it sounds like a launch tweet, rewrite it.',
+        cares: 'voice',
+        lines: {
+          happy: 'Zero hype. Sounds like a person. Love it.',
+          meh: 'One or two lines drift into ad-speak.',
+          mad: 'This reads like a crypto launch.',
+        },
+      },
+    ],
+    rounds: [
+      {
+        title: 'Welcome',
+        layout: 'hero',
+        goal: 'Greet a skeptical new user and get them to try one real draft.',
+        static: { nav: ['Product', 'Pricing', 'Sign in'] },
+        fields: [
+          { id: 'headline', slot: 'headline', kind: 'headline', label: 'Headline', max: 44,
+            hint: 'Say what Quill does in plain words: it drafts your writing.',
+            must: [
+              { need: 'Say what it does: drafts writing', any: ['draft', 'write', 'writing', 'first version'] },
+            ] },
+          { id: 'sub', slot: 'body', kind: 'body', label: 'Subhead', max: 110,
+            hint: 'Quill drafts your emails and docs. You edit and decide what goes out.',
+            must: [
+              { need: 'Say they stay in control', any: ['you edit', 'you decide', 'you choose', "you're in charge", 'you stay', 'in control', 'your call', 'you approve'] },
+              { need: 'Name a real use: emails, docs or replies', any: ['email', 'doc', 'repl', 'message', 'report'] },
+            ] },
+          { id: 'cta', slot: 'cta', kind: 'cta', label: 'Button', max: 22,
+            hint: 'Start a first draft.',
+            must: [
+              { need: 'Name the action: try or start a draft', any: ['draft', 'try', 'start', 'write'] },
+            ] },
+        ],
+      },
+      {
+        title: 'Honest heads-up',
+        layout: 'dialog',
+        goal: 'Before the first draft, set honest expectations: Quill can get facts wrong.',
+        static: {},
+        fields: [
+          { id: 'title', slot: 'title', kind: 'title', label: 'Title', max: 40,
+            hint: 'Introduce a quick heads-up before they start.',
+            must: [
+              { need: 'Signal this is a quick note', any: ['before', 'heads-up', 'heads up', 'quick note', 'good to know', 'note', 'know'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 150,
+            hint: 'Quill can get facts wrong, so check names, numbers and dates before you send.',
+            must: [
+              { need: 'Admit it can get things wrong', any: ['wrong', 'mistake', 'error', 'not always right', 'incorrect', 'make things up'] },
+              { need: 'Tell them to check facts before sending', any: ['check', 'review', 'double-check', 'verify'] },
+            ],
+            avoid: ['always accurate', '100%', 'perfect', 'never wrong', 'guarantee'] },
+          { id: 'primary', slot: 'cta', kind: 'cta', label: 'Primary button', max: 18,
+            hint: 'Acknowledge and start writing.',
+            must: [
+              { need: 'Let them move on to writing', any: ['got it', 'start', 'write', 'draft', 'understood', 'sounds good'] },
+            ] },
+          { id: 'secondary', slot: 'secondary', kind: 'cta', label: 'Secondary button', max: 24,
+            hint: 'Show how Quill handles their data.',
+            must: [
+              { need: 'Offer details on how it works', any: ['how', 'data', 'privacy', 'works'] },
+            ] },
+        ],
+      },
+      {
+        title: 'Free drafts used up',
+        layout: 'summary',
+        goal: 'They used all 20 free drafts this month. Recap what they did and invite them to upgrade.',
+        static: { stats: [['Drafts', '20 of 20'], ['Time saved', '~3 hrs'], ['Resets', 'Mar 1']] },
+        fields: [
+          { id: 'headline', slot: 'headline', kind: 'headline', label: 'Headline', max: 36,
+            hint: 'Tell them they have used all their free drafts.',
+            must: [
+              { need: 'Say they used all the free drafts', any: ['used', 'all 20', 'reached', 'out of', 'no drafts left', 'limit'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 110,
+            hint: 'Free drafts reset March 1. Everything you saved stays put.',
+            must: [
+              { need: 'Say when it resets: March 1', any: ['march 1', 'mar 1', 'march first'] },
+              { need: 'Reassure them saved drafts are kept', any: ['saved', 'keep', 'still have', 'safe', 'stay'] },
+            ] },
+          { id: 'upsell', slot: 'upsell', kind: 'body', label: 'Upgrade pitch', max: 90,
+            hint: 'Pro is $12 a month for unlimited drafts.',
+            must: [
+              { need: 'Name the plan: Pro', any: ['pro'] },
+              { need: 'Give the price: $12', any: ['12'] },
+              { need: 'Say what they get: unlimited drafts', any: ['unlimited', 'no limit'] },
+            ] },
+          { id: 'cta', slot: 'cta', kind: 'cta', label: 'Button', max: 22,
+            hint: 'Upgrade to Pro.',
+            must: [
+              { need: 'Name the action: upgrade', any: ['upgrade', 'get pro', 'go pro', 'try pro', 'start'] },
+            ] },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'G',
+    playable: true,
+    company: 'Trailhead Outdoors',
+    genre: 'Outdoor gear e-commerce',
+    stars: 5,
+    teaser: 'Strict return rules. Say no kindly, and always offer a way forward.',
+    brand: { color: '#3f7d3a', ink: '#13250f', surface: '#f3f6ec', mark: 'TO' },
+    business:
+      'Trailhead Outdoors sells hiking and camping gear online and from 12 stores in the Mountain West. Its return rules are strict: 30 days, unused, tags on.',
+    project:
+      'We are rewriting the returns flow because strict rules are costing loyal customers. Say no kindly, and always offer a next step.',
+    tone: { label: 'Outdoorsy, friendly, straight-talking', exclamations: 1, serious: false },
+    avoid: ['unfortunately', 'policy prohibits', 'per our policy', 'non-negotiable', 'utilize', 'kindly', 'valued customer'],
+    stakeholders: [
+      {
+        name: 'Hank Morrow',
+        role: 'Founder',
+        wants: 'Sound like a guide at the trailhead, not a lawyer.',
+        cares: 'voice',
+        lines: {
+          happy: 'Sounds like us. Like a friend who knows the trail.',
+          meh: 'A bit stiff. Loosen the boots.',
+          mad: 'This reads like a terms-of-service page.',
+        },
+      },
+      {
+        name: 'Carmen Ruiz',
+        role: 'Customer Care Manager',
+        wants: 'Every no needs a next step: exchange, repair or store credit.',
+        cares: 'message',
+        lines: {
+          happy: 'Every no has a way forward. My team will love it.',
+          meh: 'Mostly there, but someone will still call us.',
+          mad: 'Dead ends everywhere. Our phones will melt.',
+        },
+      },
+      {
+        name: 'Theo Lindqvist',
+        role: 'E-commerce Product Manager',
+        wants: 'Mobile first. If it wraps to five lines, it is too long.',
+        cares: 'fit',
+        lines: {
+          happy: 'Tight and scannable. Perfect on a phone.',
+          meh: 'Some lines run long on mobile.',
+          mad: 'Wall of text. Nobody reads this on a phone.',
+        },
+      },
+    ],
+    rounds: [
+      {
+        title: 'Start a return',
+        layout: 'form',
+        goal: 'Explain the return rules up front and help them pick an item.',
+        static: { step: 'Returns', banks: ['Trail Runner 2 shoes · $139', 'Summit 30L pack · $189', 'Camp mug · $18'] },
+        fields: [
+          { id: 'headline', slot: 'headline', kind: 'headline', label: 'Headline', max: 36,
+            hint: 'Invite them to start a return.',
+            must: [
+              { need: 'Say return', any: ['return'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 140,
+            hint: 'Returns are free within 30 days for unused gear with the tags on.',
+            must: [
+              { need: 'Give the window: 30 days', any: ['30'] },
+              { need: 'Say it must be unused', any: ['unused', "haven't used", 'not used', 'new condition', 'unworn'] },
+              { need: 'Mention the tags', any: ['tag'] },
+            ],
+            avoid: ['policy prohibits', 'non-negotiable'] },
+          { id: 'cta', slot: 'cta', kind: 'cta', label: 'Button', max: 22,
+            hint: 'Pick an item to return.',
+            must: [
+              { need: 'Name the action: pick an item', any: ['choose', 'pick', 'select', 'start', 'return'] },
+            ] },
+        ],
+      },
+      {
+        title: 'Past the return window',
+        layout: 'dialog',
+        goal: 'Their tent was bought 41 days ago, past the 30-day window. Say no kindly and offer a free repair or store credit.',
+        static: {},
+        fields: [
+          { id: 'title', slot: 'title', kind: 'title', label: 'Title', max: 40,
+            hint: 'Say this one cannot be returned.',
+            must: [
+              { need: 'Say it cannot be returned', any: ["can't be returned", 'cannot be returned', "can't return", 'past the', 'too late', 'window', 'not returnable'] },
+            ],
+            avoid: ['denied', 'rejected', 'error'] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 150,
+            hint: 'It is past 30 days, but we can repair it for free or give you store credit.',
+            must: [
+              { need: 'Explain why: past 30 days', any: ['30', 'past', 'days'] },
+              { need: 'Offer a free repair', any: ['repair', 'fix'] },
+              { need: 'Offer store credit', any: ['credit'] },
+            ],
+            avoid: ['unfortunately', 'policy'] },
+          { id: 'primary', slot: 'cta', kind: 'cta', label: 'Primary button', max: 20,
+            hint: 'Request the repair.',
+            must: [
+              { need: 'Name the action: repair', any: ['repair', 'fix', 'send'] },
+            ] },
+          { id: 'secondary', slot: 'secondary', kind: 'cta', label: 'Secondary button', max: 22,
+            hint: 'Choose store credit instead.',
+            must: [
+              { need: 'Offer store credit', any: ['credit'] },
+            ] },
+        ],
+      },
+      {
+        title: 'Return approved',
+        layout: 'confirm',
+        goal: 'Their return is approved. Explain how to send it back and when the refund lands.',
+        static: { rows: [['Item', 'Summit 30L pack'], ['Drop-off', 'Any UPS store'], ['Ship by', 'April 12']] },
+        fields: [
+          { id: 'headline', slot: 'headline', kind: 'headline', label: 'Headline', max: 36,
+            hint: 'Tell them the return is approved.',
+            must: [
+              { need: 'Say the return is approved', any: ['approved', 'all set', 'good to go', 'ready', 'accepted', 'on its way'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Details', max: 140,
+            hint: 'Drop it at any UPS store by April 12. Your refund lands 3 to 5 days after we get it.',
+            must: [
+              { need: 'Say where: any UPS store', any: ['ups'] },
+              { need: 'Give the deadline: April 12', any: ['april 12', 'apr 12'] },
+              { need: 'Say when the refund lands', any: ['refund'] },
+            ] },
+          { id: 'cta', slot: 'cta', kind: 'cta', label: 'Button', max: 22,
+            hint: 'Show the return label.',
+            must: [
+              { need: 'Name the action: get the label', any: ['label', 'show', 'print', 'get', 'view'] },
+            ] },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'H',
+    playable: true,
+    company: 'Orbit Air',
+    genre: 'Airline disruptions',
+    stars: 5,
+    teaser: 'Cancelled flight, 300 tired passengers, one push notification.',
+    brand: { color: '#d64545', ink: '#2b0d0d', surface: '#fdf3f1', mark: 'OA' },
+    business:
+      'Orbit Air is a low-cost airline flying 180 routes across North America from busy hub airports. When a flight breaks, 300 tired passengers read the same alert at once.',
+    project:
+      'We are rewriting disruption messages because vague alerts send everyone to one overwhelmed gate agent. Say what happened, what we are doing, and what they can do now.',
+    tone: { label: 'Honest, human, fast', exclamations: 0, serious: true },
+    avoid: ['unfortunately', 'inconvenience', 'operational reasons', 'valued customer', 'oops', 'kindly', 'regret to inform'],
+    stakeholders: [
+      {
+        name: 'Grace Achebe',
+        role: 'VP of Operations',
+        wants: 'Every alert needs the flight, the new time and the gate. People are standing in an airport.',
+        cares: 'message',
+        lines: {
+          happy: 'Flight, time, gate. My agents can breathe.',
+          meh: 'Close, but one missing detail sends people to the desk.',
+          mad: 'Everyone is going to line up at the gate now.',
+        },
+      },
+      {
+        name: 'Sami Rahman',
+        role: 'Customer Advocate',
+        wants: 'Own it. Say sorry once, plainly, and skip the corporate excuses.',
+        cares: 'voice',
+        lines: {
+          happy: 'Human and honest. People will feel respected.',
+          meh: 'A little stiff. Sounds like a press release.',
+          mad: 'This hides behind jargon. People will be furious.',
+        },
+      },
+      {
+        name: 'Ivy Chen',
+        role: 'Mobile Product Lead',
+        wants: 'Give them a button that solves it: rebook, take a credit, see options.',
+        cares: 'action',
+        lines: {
+          happy: 'One tap and they are sorted. Beautiful.',
+          meh: 'The next step is there, but easy to miss.',
+          mad: 'No clear way out. They will all call.',
+        },
+      },
+    ],
+    rounds: [
+      {
+        title: 'Delay alert',
+        layout: 'notification',
+        goal: 'Flight OA 214 to Denver is delayed 2 hours. It now leaves at 6:40 p.m. from gate C9.',
+        static: { app: 'Orbit Air' },
+        fields: [
+          { id: 'title', slot: 'title', kind: 'title', label: 'Title', max: 40,
+            hint: 'Say flight OA 214 is delayed.',
+            must: [
+              { need: 'Name the flight: OA 214', any: ['214'] },
+              { need: 'Say it is delayed', any: ['delay', 'late', 'later'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 140,
+            hint: 'Now leaving at 6:40 p.m. from gate C9. Sorry for the wait.',
+            must: [
+              { need: 'Give the new time: 6:40 p.m.', any: ['6:40'] },
+              { need: 'Give the gate: C9', any: ['c9'] },
+              { need: 'Apologize once, plainly', any: ['sorry', 'apolog'] },
+            ] },
+          { id: 'action', slot: 'cta', kind: 'cta', label: 'Action', max: 18,
+            hint: 'Show their options.',
+            must: [
+              { need: 'Let them see their options', any: ['see', 'view', 'option', 'rebook', 'change'] },
+            ] },
+        ],
+      },
+      {
+        title: 'Flight cancelled',
+        layout: 'dialog',
+        goal: 'OA 377 is cancelled. They are rebooked on tomorrow’s 8:05 a.m. flight, with a $200 credit.',
+        static: {},
+        fields: [
+          { id: 'title', slot: 'title', kind: 'title', label: 'Title', max: 40,
+            hint: 'Say flight OA 377 is cancelled.',
+            must: [
+              { need: 'Say it is cancelled', any: ['cancel'] },
+              { need: 'Name the flight: OA 377', any: ['377'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 160,
+            hint: 'We moved you to tomorrow at 8:05 a.m. and added a $200 credit. Hotel vouchers are at the desk.',
+            must: [
+              { need: 'Say they are rebooked', any: ['rebook', 'moved you', 'new flight', 'booked you', 'seat on'] },
+              { need: 'Give the new time: 8:05 a.m.', any: ['8:05'] },
+              { need: 'Mention the $200 credit', any: ['200'] },
+            ] },
+          { id: 'primary', slot: 'cta', kind: 'cta', label: 'Primary button', max: 22,
+            hint: 'Keep the new flight.',
+            must: [
+              { need: 'Let them keep the new flight', any: ['keep', 'confirm', 'accept', 'sounds good'] },
+            ] },
+          { id: 'secondary', slot: 'secondary', kind: 'cta', label: 'Secondary button', max: 24,
+            hint: 'See other flights.',
+            must: [
+              { need: 'Offer other flights', any: ['other', 'see', 'change', 'different', 'option'] },
+            ] },
+        ],
+      },
+      {
+        title: 'Choose compensation',
+        layout: 'summary',
+        goal: 'Offer compensation for the cancellation: a $200 travel credit, or $150 back to their card.',
+        static: { stats: [['Flight', 'OA 377'], ['Delay', '14 hrs'], ['Credit', '$200']] },
+        fields: [
+          { id: 'headline', slot: 'headline', kind: 'headline', label: 'Headline', max: 36,
+            hint: 'Tell them they get something for the trouble.',
+            must: [
+              { need: 'Say this is for the trouble', any: ['for the trouble', 'owe you', 'make it up', 'compensation', 'credit', 'refund', 'yours'] },
+            ] },
+          { id: 'body', slot: 'body', kind: 'body', label: 'Body', max: 120,
+            hint: 'Pick a $200 travel credit, or $150 back to your card.',
+            must: [
+              { need: 'Offer the $200 credit', any: ['200'] },
+              { need: 'Offer the $150 refund', any: ['150'] },
+            ] },
+          { id: 'upsell', slot: 'upsell', kind: 'body', label: 'Credit details', max: 90,
+            hint: 'The credit never expires and works on any route.',
+            must: [
+              { need: 'Say the credit never expires', any: ['never expire', "doesn't expire", 'no expir', "won't expire", 'does not expire'] },
+              { need: 'Say it works on any route', any: ['any route', 'any flight', 'anywhere', 'any trip'] },
+            ] },
+          { id: 'cta', slot: 'cta', kind: 'cta', label: 'Button', max: 22,
+            hint: 'Take the credit.',
+            must: [
+              { need: 'Name the action: take the credit', any: ['take', 'get', 'claim', 'choose', 'use'] },
+            ] },
+        ],
+      },
+    ],
+  },
 ];
 
 export function levelSummary(l) {

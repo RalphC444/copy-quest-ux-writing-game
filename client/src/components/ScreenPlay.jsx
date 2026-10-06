@@ -6,7 +6,7 @@ import PixelJudge from './PixelJudge.jsx';
 
 const HURRY_AT = 15;
 
-export default function ScreenPlay({ level, screenIdx, difficulty, onSubmit }) {
+export default function ScreenPlay({ level, screenIdx, difficulty, onSubmit, onQuit }) {
   const screen = level.rounds[screenIdx];
   const diff = getDifficulty(difficulty);
   const [values, setValues] = useState(() => Object.fromEntries(screen.fields.map((f) => [f.id, ''])));
@@ -68,7 +68,10 @@ export default function ScreenPlay({ level, screenIdx, difficulty, onSubmit }) {
           <span className="hud-level">{level.id}-{screenIdx + 1}</span>
           <span className="hud-company">{screen.title}</span>
         </div>
-        <span className="hud-diff">{diff.name}</span>
+        <div className="hud-mid">
+          <span className="hud-diff">{diff.name}</span>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => { submitted.current = true; onQuit(); }}>Quit to map</button>
+        </div>
         <div className={`hud-timer ${hurry ? 'hurry' : ''}`} role="timer" aria-live="off">
           {fmtTime(remaining)}
         </div>
@@ -78,7 +81,14 @@ export default function ScreenPlay({ level, screenIdx, difficulty, onSubmit }) {
       <div className="round-body">
         <div className="round-stage-col">
           <div className="round-stage">
-            <ScreenMockup level={level} round={screen} values={values} active={active} />
+            <ScreenMockup
+              level={level}
+              round={screen}
+              values={values}
+              active={active}
+              onFocusField={setActive}
+              onEdit={(id, text) => { setValues((prev) => ({ ...prev, [id]: text })); audio.play('type'); }}
+            />
           </div>
           <div className="judges-desk-wrap">
             <div className="judges-row">
@@ -123,6 +133,7 @@ export default function ScreenPlay({ level, screenIdx, difficulty, onSubmit }) {
           <div className="brief-card">
             <p className="eyebrow">This screen</p>
             <h3>{screen.goal}</h3>
+            <p className="tip">Type on the screen itself, or in the fields below.</p>
           </div>
 
           <form className="copy-form" onSubmit={(e) => { e.preventDefault(); submit(); }}>

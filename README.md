@@ -17,10 +17,10 @@ Copy `server/.env.example` to `server/.env` and set `ANTHROPIC_API_KEY`. The res
 
 ## How it plays
 
-1. **World select:** big letters A–H, one per company. Hover a letter to preview the client. A–D are playable and E–H are locked teasers.
-2. **Briefing wizard:** the business, the project, and the three judges (the stakeholders). Each judge scores one skill.
-3. **Level map:** each screen is a level (A-1, A-2, A-3). Levels unlock in order. Pick a difficulty: Easy 4:00, Normal 2:30 or Hard 1:15. Harder means a stricter grader and more XP.
-4. **Play:** a 3-2-1 countdown, then the music starts and the timer runs. Copy appears live in the screen mockup as you type. Context about the company stays on screen, and the judges watch from their desk.
+1. **World select:** eight clients (A–H), each shown as a full-screen pixel-art environment with the details overlaid: a bakery, a fintech tower, a clinic, an EV charging stop, a harbor bank, a writing studio, a mountain gear shop and an airport. Use the arrows (or ← →) to browse. The next world wipes in and the page glow changes to match it. Everyone starts on World A, and clearing all three levels of a world unlocks the next. The older letter grid is still available under **Classic grid view**.
+2. **Briefing cutscene** (first visit to a world): the world's environment fills the screen with letterbox bars while the business, the project and each judge are introduced. It ends with a difficulty pick and **Start level 1**. Skip jumps to that last step.
+3. **Level map** (every visit after that): each screen is a level (A-1, A-2, A-3), unlocked in order. Pick a difficulty here: Easy 4:00, Normal 2:30 or Hard 1:15. Harder means a stricter grader and more XP. **Replay briefing** replays the cutscene. **Quit to map** leaves a level at any time.
+4. **Play:** a 3-2-1 countdown, then the music starts and the timer runs. Click any copy slot on the screen mockup and type there, or use the fields beside it; the two stay in sync. Context about the company stays on screen, and the judges watch from their desk.
 5. **Judging** (after every level): after a drumroll, each judge raises a cardboard scorecard from 1 to 10, Dancing with the Stars style. You then get your grade, stars, XP, and a line-by-line breakdown.
 
 ### Scoring

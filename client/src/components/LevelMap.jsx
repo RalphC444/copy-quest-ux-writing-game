@@ -9,48 +9,44 @@ export default function LevelMap({ level, progress, difficulty, onDifficulty, on
 
   return (
     <section className="level-map" style={{ '--lv': level.brand.color }}>
-      <header className="screen-head">
-        <p className="eyebrow">World {level.id} · {level.genre}</p>
-        <h2>{level.company}</h2>
-      </header>
+      <button className="link-btn back-link" onClick={() => { audio.play('back'); onBack(); }}>← Level select</button>
 
-      <ol className="map-path">
-        {level.rounds.map((r, i) => {
-          const best = progress[screenKey(level.id, i)];
-          const open = unlocked(i);
-          return (
-            <li key={r.title} className={`map-node ${open ? '' : 'locked'} ${i === nextUp ? 'next' : ''} ${best ? 'cleared' : ''}`}>
-              <button
-                disabled={!open}
-                onClick={() => { audio.play('go'); onPlay(i); }}
-                onMouseEnter={() => open && audio.play('hover')}
-                aria-label={`Level ${level.id}-${i + 1}: ${r.title}${open ? '' : ' (locked)'}`}
-              >
-                <span className="node-num">{level.id}-{i + 1}</span>
-                <span className="node-title">{r.title}</span>
-                <span className="node-goal">{r.goal}</span>
-                <span className="node-foot">
-                  {best ? (
-                    <>
-                      <span className={`node-grade grade-${best.grade}`}>{best.grade}</span>
-                      <span className="stars" aria-label={`${best.stars} of 3 stars`}>
-                        {[0, 1, 2].map((s) => <i key={s} className={s < best.stars ? 'on' : ''} />)}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="node-status">{open ? 'Play' : `Clear ${level.id}-${i} to unlock`}</span>
-                  )}
+      {/* Details: read-only context about the client */}
+      <div className="map-details">
+        <div className="map-details-head">
+          <span className="brand-mark lg" style={{ background: level.brand.color }}>{level.brand.mark}</span>
+          <div>
+            <p className="eyebrow">World {level.id} · {level.genre}</p>
+            <h2>{level.company}</h2>
+          </div>
+          <button className="link-btn" onClick={onBriefing}>Replay briefing</button>
+        </div>
+        <dl className="map-facts">
+          <div><dt>The business</dt><dd>{level.business}</dd></div>
+          <div><dt>The project</dt><dd>{level.project}</dd></div>
+          <div><dt>Voice</dt><dd>{level.tone.label}</dd></div>
+        </dl>
+        <div className="map-judges">
+          <p className="facts-label">Your judges</p>
+          <ul>
+            {level.stakeholders.map((s, i) => (
+              <li key={s.name}>
+                <PixelJudge name={s.name} look={s.look} index={i} size="sm" plate={false} />
+                <span>
+                  <strong>{s.name}</strong>
+                  <em>{s.role}</em>
                 </span>
-              </button>
-            </li>
-          );
-        })}
-      </ol>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
-      <div className="map-lower">
-        <div className="diff-pick" role="radiogroup" aria-label="Difficulty">
-          <span className="eyebrow">Difficulty</span>
-          <div className="diff-row">
+      {/* Actions: choose difficulty, then play a level */}
+      <div className="map-levels">
+        <div className="map-levels-head">
+          <h3>Levels</h3>
+          <div className="diff-row" role="radiogroup" aria-label="Difficulty">
             {DIFFICULTIES.map((d) => (
               <button
                 key={d.id}
@@ -66,19 +62,41 @@ export default function LevelMap({ level, progress, difficulty, onDifficulty, on
           </div>
         </div>
 
-        <div className="map-judges">
-          <span className="eyebrow">Your judges</span>
-          <div className="judges-row small">
-            {level.stakeholders.map((s, i) => (
-              <PixelJudge key={s.name} name={s.name} look={s.look} index={i} size="sm" />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="wizard-actions">
-        <button className="btn btn-ghost" onClick={() => { audio.play('back'); onBack(); }}>Level select</button>
-        <button className="btn btn-ghost" onClick={onBriefing}>Replay briefing</button>
+        <ol className="map-path">
+          {level.rounds.map((r, i) => {
+            const best = progress[screenKey(level.id, i)];
+            const open = unlocked(i);
+            return (
+              <li key={r.title} className={`map-node ${open ? '' : 'locked'} ${i === nextUp ? 'next' : ''} ${best ? 'cleared' : ''}`}>
+                <button
+                  disabled={!open}
+                  onClick={() => { audio.play('go'); onPlay(i); }}
+                  onMouseEnter={() => open && audio.play('hover')}
+                  aria-label={`Level ${level.id}-${i + 1}: ${r.title}${open ? '' : ' (locked)'}`}
+                >
+                  <span className="node-num">{level.id}-{i + 1}</span>
+                  <span className="node-body">
+                    <span className="node-title">{r.title}</span>
+                    <span className="node-goal">{r.goal}</span>
+                  </span>
+                  <span className="node-foot">
+                    {best ? (
+                      <>
+                        <span className={`node-grade grade-${best.grade}`}>{best.grade}</span>
+                        <span className="stars" aria-label={`${best.stars} of 3 stars`}>
+                          {[0, 1, 2].map((s) => <i key={s} className={s < best.stars ? 'on' : ''} />)}
+                        </span>
+                        <span className="node-status">Replay</span>
+                      </>
+                    ) : (
+                      <span className="node-status">{open ? 'Play ▶' : `Clear ${level.id}-${i} to unlock`}</span>
+                    )}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );
