@@ -54,3 +54,29 @@ export async function critique(level, screenIdx, result) {
   const text = response.content.filter((b) => b.type === 'text').map((b) => b.text).join('');
   return parseJson(text);
 }
+
+// Type Quest: notes on visual hierarchy from the submitted type styles.
+export async function critiqueType(level, styles, result) {
+  if (!client) return null;
+  const rows = level.elements.map((e) => {
+    const s = styles?.[e.id] || {};
+    return `- "${e.text}" (${e.role}): ${s.size}px, weight ${s.weight}, ${s.tone}${s.upper ? ', uppercase' : ''}${s.tabular ? ', tabular' : ''}`;
+  }).join('\n');
+  const prompt = `You are a senior product designer specialising in data-dense fintech UI, reviewing a junior designer's typographic hierarchy in a training game. Layout is fixed; they only control size, weight, emphasis, case and tabular numbers.
+
+Screen: ${level.title} for ${level.client}. Brief: ${level.brief} Task: ${level.task}
+Their styles:
+${rows}
+Rule-based score: ${result?.total}/100. Eye path: ${(result?.ranking || []).join(' -> ')}.
+
+Give candid, encouraging feedback grounded in visual hierarchy and Gestalt principles. Reply with only JSON:
+{"summary": "2-3 sentences", "strength": "one specific thing done well", "focus": "the single habit to work on next"}`;
+  const response = await client.beta.messages.create({
+    model: 'claude-opus-5-5', max_tokens: 4000,
+    betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default',
+    output_config: { effort: 'low' },
+    messages: [{ role: 'user', content: prompt }],
+  });
+  if (response.stop_reason === 'refusal') return null;
+  return parseJson(response.content.filter((b) => b.type === 'text').map((b) => b.text).join(''));
+}
