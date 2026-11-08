@@ -12,5 +12,6 @@ export const api = {
   health: () => request('/health'),
   levels: () => request('/levels'),
   level: (id) => request(`/levels/${id}`),
+  typeCritique: (payload) => request('/type-critique', { method: 'POST', body: JSON.stringify(payload) }),
   grade: (payload) => request('/grade', { method: 'POST', body: JSON.stringify(payload) }),
 };
