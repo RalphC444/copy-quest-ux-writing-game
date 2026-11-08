@@ -15,11 +15,14 @@ import LevelMap from './components/LevelMap.jsx';
 import Countdown from './components/Countdown.jsx';
 import ScreenPlay from './components/ScreenPlay.jsx';
 import ScreenResult from './components/ScreenResult.jsx';
+import TypeQuest from './type/TypeQuest.jsx';
 
 // Flow: title → select (worlds A–H) → briefing cutscene (first visit only) → countdown → play → result → map
 // The level map is the hub once a player has left their first level.
 export default function App() {
   const [phase, setPhase] = useState('title');
+  const [game, setGame] = useState(() => (location.hash === '#type' ? 'type' : 'copy'));
+  const switchGame = (g) => { setGame(g); history.replaceState(null, '', g === 'type' ? '#type' : '#'); audio.stopMusic(); setPhase(g === 'type' ? 'type' : 'title'); };
   const [levels, setLevels] = useState([]);
   const [level, setLevel] = useState(null);
   const [difficulty, setDifficulty] = useState('normal');
@@ -85,9 +88,13 @@ export default function App() {
   return (
     <div className="shell" style={glow ? { '--world-glow': glow } : undefined}>
       <header className="topbar">
-        <button className="wordmark" onClick={toSelect} disabled={phase === 'title'}>
-          COPY<span>QUEST</span>
+        <button className="wordmark" onClick={game === 'type' ? undefined : toSelect} disabled={phase === 'title' || game === 'type'}>
+          {game === 'type' ? 'TYPE' : 'COPY'}<span>QUEST</span>
         </button>
+        <div className="tq-game-switch" role="tablist" aria-label="Choose a game">
+          <button role="tab" aria-selected={game === 'copy'} className={`btn${game === 'copy' ? ' btn-primary' : ''}`} onClick={() => switchGame('copy')}>Copy Quest</button>
+          <button role="tab" aria-selected={game === 'type'} className={`btn${game === 'type' ? ' btn-primary' : ''}`} onClick={() => switchGame('type')}>Type Quest</button>
+        </div>
         <div className="topbar-right">
           <RankBadge xp={player.xp} />
           <button
@@ -109,7 +116,8 @@ export default function App() {
       )}
 
       <main className="stage">
-        {phase === 'title' && (
+        {game === 'type' && <TypeQuest onAI={(lvl, styles, result) => api.typeCritique({ levelId: lvl.id, level: lvl, styles, result })} />}
+        {game === 'copy' && phase === 'title' && (
           <TitleScreen
             xp={player.xp}
             onStart={() => { audio.play('go'); setPhase('select'); }}
@@ -117,7 +125,7 @@ export default function App() {
           />
         )}
 
-        {phase === 'select' && levels.length > 0 && (selectView === 'world' ? (
+        {game === 'copy' && phase === 'select' && levels.length > 0 && (selectView === 'world' ? (
           <WorldSelect
             levels={levels}
             progress={progress}
@@ -129,7 +137,7 @@ export default function App() {
           <LevelSelect levels={levels} progress={progress} onPick={pickWorld} onWorldView={() => switchView('world')} />
         ))}
 
-        {phase === 'cutscene' && level && (
+        {game === 'copy' && phase === 'cutscene' && level && (
           <Cutscene
             level={level}
             mode={cutMode}
@@ -140,7 +148,7 @@ export default function App() {
           />
         )}
 
-        {phase === 'map' && level && (
+        {game === 'copy' && phase === 'map' && level && (
           <LevelMap
             level={level}
             progress={progress}
@@ -152,11 +160,11 @@ export default function App() {
           />
         )}
 
-        {phase === 'countdown' && (
+        {game === 'copy' && phase === 'countdown' && (
           <Countdown label={`Level ${level.id}-${screenIdx + 1}`} sub={level.rounds[screenIdx].title} onDone={() => setPhase('play')} />
         )}
 
-        {phase === 'play' && (
+        {game === 'copy' && phase === 'play' && (
           <ScreenPlay
             key={`${level.id}-${screenIdx}-${attempt}`}
             level={level}
@@ -167,7 +175,7 @@ export default function App() {
           />
         )}
 
-        {phase === 'result' && (
+        {game === 'copy' && phase === 'result' && (
           <ScreenResult
             key={`r-${level.id}-${screenIdx}-${attempt}`}
             level={level}
