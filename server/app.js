@@ -5,7 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import { levels, levelSummary, getLevel } from './data/levels.js';
 import { gradeScreen } from './grading/heuristic.js';
-import { aiEnabled, critique } from './grading/ai.js';
+import { aiEnabled, critique, critiqueType } from './grading/ai.js';
 import { saveRun, listRuns } from './store/runs.js';
 
 const app = express();
@@ -54,6 +54,20 @@ app.post('/api/critique', async (req, res) => {
   } catch (err) {
     console.error('critique failed:', err?.status ?? '', err?.message);
     res.status(502).json({ error: 'Could not reach the Creative Director. Check the API key and try again.' });
+  }
+});
+
+app.post('/api/type-critique', async (req, res) => {
+  const { level, styles, result } = req.body || {};
+  if (!level?.elements || !styles) return res.status(400).json({ error: 'Send a level and styles to review.' });
+  if (!aiEnabled) return res.status(503).json({ error: 'AI notes are off.' });
+  try {
+    const notes = await critiqueType(level, styles, result);
+    if (!notes) return res.status(502).json({ error: 'No notes this time.' });
+    res.json(notes);
+  } catch (err) {
+    console.error('type critique failed:', err?.message);
+    res.status(502).json({ error: 'Could not reach the design director.' });
   }
 });
 
